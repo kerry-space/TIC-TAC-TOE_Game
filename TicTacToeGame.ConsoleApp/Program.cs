@@ -1,17 +1,12 @@
-﻿
-
-
-using System.Security.Cryptography.X509Certificates;
-using TicTacToeGame.Core;
+﻿using TicTacToeGame.Core;
 
 public class Program
 {
     public static int col = 0;
     public static int row = 0;
-   
+
     public static void Main()
     {
-
         Game game = new Game();
         PlayerSymbol player = PlayerSymbol.X;
         PlayerSymbol computer = PlayerSymbol.O;
@@ -22,7 +17,6 @@ public class Program
 
         while (endGame)
         {
-            
             Console.WriteLine();
             game.CellNumber();
             game.RenderBoard();
@@ -33,10 +27,10 @@ public class Program
                 Console.Write($"\nPlayer {player}, make your move (1-9): ");
                 int userMove = GetInputFromUser();
                 Console.WriteLine();
-                
+
                 GetBoardPosition(userMove);
 
-                if (game.MakeMove(row, col, player))
+                if (game.UserMakeMove(row, col, player))
                 {
                     game.RenderBoard();
 
@@ -74,21 +68,19 @@ public class Program
 
             Console.Write("Do you want to play again? (y/n): ");
             char playAgain = Console.ReadKey().KeyChar;
-            if(playAgain == 'y' || playAgain == 'Y')
+            if (playAgain == 'y' || playAgain == 'Y')
             {
                 Console.Clear();
                 endGame = true;
-            }else 
+            }
+            else
             {
                 endGame = false;
             }
         }
     }
 
-
-
-
-      //Methods
+    //Methods
     public static void GetBoardPosition(int userMove)
     {
         switch (userMove)
@@ -132,13 +124,8 @@ public class Program
         }
     }
 
-
-
-
     public static int GetInputFromUser()
     {
-
-
         string userInput = Console.ReadLine();
         int userMove = 0;
         while (true)
@@ -147,7 +134,6 @@ public class Program
             {
                 return userMove;
             }
-
             Console.Write("Please enter correct move!: ");
         }
     }

@@ -5,15 +5,15 @@ namespace TicTacToeGame.Tests;
 public class GameTest
 {
     [Fact]
-    public void TestMakeMove_WrongInput_ReturnFalse()
+    public void TestUserMakeMove_InvalidMove_ReturnFalse()
     {
         //Arrange
         int row = 7;
         int col = 8;
         var game = new Game();
 
-        //act
-        bool result = game.MakeMove(row, col, PlayerSymbol.X);
+        //Act
+        bool result = game.UserMakeMove(row, col, PlayerSymbol.X);
 
         //Assert 
         Assert.False(result);
