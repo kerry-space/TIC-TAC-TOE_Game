@@ -1,18 +1,22 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TicTacToeGame.Core;
 
 public class Game
 {
     // Fields or properties
+    int num = 1;
     private string[,] board;
     private int size = 3;
+    private Random random = new Random();
+
 
     // Constructor
     public Game()
     {
         board = new string[size, size];
-        ResetGame();
+        
     }
 
     // Methods
@@ -20,28 +24,76 @@ public class Game
     // Render the game board to the console
     public void RenderBoard()
     {
+   
+        Console.WriteLine("┌───┬───┬───┐");
         for (int i = 0; i < size; i++)
         {
+            Console.Write($"|");
             for (int j = 0; j < size; j++)
             {
-                Console.Write(board[i, j] + " ");
+                SetCellColor(board[i, j]);
+                Console.Write($" {board[i, j]} ");
+                Console.ResetColor();
+                Console.Write($"|");
             }
-            Console.WriteLine();
+           
+           
+           Console.WriteLine();
+           if(i < size -1){
+                Console.WriteLine("├───┼───┼───┤");
+           }
+
         }
+        Console.WriteLine("└───┴───┴───┘");
+
+
     }
 
     // Make a move on the board
     public bool MakeMove(int row, int col, PlayerSymbol symbol)
-    {
+    {   
+
         //Checks if targeted cell is empty and within row and col range to be able to place the player's symbol
-        if (row >= 0 && row < size && col >= 0 && col < size && board[row, col] == " ")
+        if (row >= 0 && row < size && col >= 0 && col < size && board[row, col] != PlayerSymbol.X.ToString()  && board[row, col] != PlayerSymbol.O.ToString())
         {
+            
             board[row, col] = symbol.ToString();
+
             return true;
         }
         Console.WriteLine("Invalid move. Try again.");
         return false;
     }
+
+    public void ComputerMove(PlayerSymbol symbol)
+    {   
+        int row, col;
+        do
+        {
+            row = random.Next(0, size);
+            col = random.Next(0, size);
+           
+        } while (board[row, col] == PlayerSymbol.X.ToString() || board[row, col] == PlayerSymbol.O.ToString());
+
+        board[row, col] = symbol.ToString();
+        Console.WriteLine($"Computer chose position: ({row },{col })\n");
+    }
+
+
+
+public bool IsDraw()
+{
+    foreach (var cell in board)
+    {
+        // Check if any cell still contains a number (indicating it's unoccupied)
+        if (cell != PlayerSymbol.X.ToString() && cell != PlayerSymbol.O.ToString())
+        {
+            return false; // Not a draw since there’s at least one unoccupied cell
+        }
+    }
+    num =1;
+    return true; // All cells are occupied, so it's a draw
+}
 
     // Check if a player has won
     public bool CheckWin(PlayerSymbol symbol)
@@ -54,6 +106,7 @@ public class Game
             if ((board[i, 0] == s && board[i, 1] == s && board[i, 2] == s) || //Row
                 (board[0, i] == s && board[1, i] == s && board[2, i] == s)) //Col
             {
+                  num = 1;
                 return true; //Exists the method and return true if combination is found here
             }
         }
@@ -62,24 +115,36 @@ public class Game
         if ((board[0, 0] == s && board[1, 1] == s && board[2, 2] == s) || //Top-Left - Bottom-Right
             (board[0, 2] == s && board[1, 1] == s && board[2, 0] == s))   //Top-Right - Bottom-Left
         {
+              num = 1;
             return true;
         }
-
+      
         return false; //If no combination is found then return false
     }
 
     // Reset the game board
-    public void ResetGame()
+    public void CellNumber()
     {
         //Implementing reset by assigning all array cells with empty strings
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
             {
-                board[i, j] = " ";
+                board[i, j] = num.ToString();
+                num++;
             }
         }
     }
+
+
+    private void SetCellColor(string cell)
+    {
+        if (cell == PlayerSymbol.X.ToString())
+            Console.ForegroundColor = ConsoleColor.Green;
+        else if (cell == PlayerSymbol.O.ToString())
+            Console.ForegroundColor = ConsoleColor.Red;
+    }
+
 }
 
 
